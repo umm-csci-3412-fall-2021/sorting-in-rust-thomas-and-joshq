@@ -105,18 +105,34 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     }
 
     // Now choose a pivot and do the organizing.
-    
-    // ...
 
-    let smaller = 0; // Totally wrong – you should fix this.
+    let mut first_pivot_index = 0;
+    let mut after_lastpivot_index = length;
+    let mut k = first_pivot_index;
+    while k < after_lastpivot_index{
+        if v[k] < v[first_pivot_index] {
+            v.swap(first_pivot_index, k);
+            first_pivot_index = first_pivot_index+1;
+            k=k+1;
+        } else if v[k] == v[first_pivot_index] {
+            k = k+1;
+        } else {
+            after_lastpivot_index = after_lastpivot_index-1;
+            v.swap(k, after_lastpivot_index);
+        }
+    }
+
+     // Totally wrong – you should fix this.
 
     // Sort all the items < pivot
-    quicksort(&mut v[0..smaller]);
+    quicksort(&mut v[0..first_pivot_index]);
     // Sort all the items ≥ pivot, *not* including the
     // pivot value itself. If we don't include the +1
     // here you can end up in infinite recursions.
-    quicksort(&mut v[smaller+1..length]);
+    quicksort(&mut v[first_pivot_index+1..length]);
 }
+
+
 
 // Merge sort can't be done "in place", so it needs to return a _new_
 // Vec<T> of the sorted elements. The array elements need to have
@@ -164,27 +180,33 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
     merge(left, right)
 }
 
-// "Out of the box" there's a warning here about `ys` being
-// unused. Presumably you'll actually use `ys` in your solution,
-// so that warning should go away. You can remove this comment
-// if you wish since it won't be relevant any longer.
 fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Vec<T>) -> Vec<T> {
-    // This takes two sorted vectors, like:
-    //    <5, 8, 9> and
-    //    <0, 2, 3, 6>
-    // and merges them into a single sorted vector like:
-    //    <0, 2, 3, 5, 6, 8, 9>
-    // You should be able to do this in linear time by having
-    // two indices that point to where you are in xs and ys.
-    // You then compare those values, push the smaller one onto
-    // the result vector, and increment the appropriate index.
-    // You stop when one of your indices hits the end of its
-    // vector, and then push all the remaining elements from the
-    // other vector onto the result.
+    let mut first_index = 0;
+    let mut second_index = 0;
+    let mid_point = xs.len();
+    let end_index = ys.len();
+    let mut destination = Vec::<T>::new();
 
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
-    xs
+    while first_index < mid_point && second_index < end_index{
+        if xs[first_index] < ys[second_index]{
+            destination.push(xs[first_index]);
+            first_index = first_index+1;
+            } 
+        else {
+            destination.push(ys[second_index]);
+            second_index = second_index+1;
+            }
+    }
+    while first_index < mid_point {
+      destination.push(xs[first_index]);
+      first_index = first_index+1;
+    }
+    while second_index < end_index {
+      destination.push(ys[second_index]);
+      second_index = second_index+1;
+    }
+
+    destination
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
