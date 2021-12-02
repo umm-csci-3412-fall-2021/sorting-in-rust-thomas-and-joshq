@@ -105,18 +105,34 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     }
 
     // Now choose a pivot and do the organizing.
-    
-    // ...
 
-    let smaller = 0; // Totally wrong – you should fix this.
+    let mut first_pivot_index = 0;
+    let mut after_lastpivot_index = length;
+    let mut k = first_pivot_index;
+    while k < after_lastpivot_index{
+        if v[k] < v[first_pivot_index] {
+            v.swap(first_pivot_index, k);
+            first_pivot_index = first_pivot_index+1;
+            k=k+1;
+        } else if v[k] == v[first_pivot_index] {
+            k = k+1;
+        } else {
+            after_lastpivot_index = after_lastpivot_index-1;
+            v.swap(k, after_lastpivot_index);
+        }
+    }
+
+     // Totally wrong – you should fix this.
 
     // Sort all the items < pivot
-    quicksort(&mut v[0..smaller]);
+    quicksort(&mut v[0..first_pivot_index]);
     // Sort all the items ≥ pivot, *not* including the
     // pivot value itself. If we don't include the +1
     // here you can end up in infinite recursions.
-    quicksort(&mut v[smaller+1..length]);
+    quicksort(&mut v[first_pivot_index+1..length]);
 }
+
+
 
 // Merge sort can't be done "in place", so it needs to return a _new_
 // Vec<T> of the sorted elements. The array elements need to have
